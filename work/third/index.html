@@ -33,7 +33,6 @@
       $(function() {
         $('.nav').find('li').click(function() {
           var targetNum = $(this).index();
-          console.log(targetNum);
           $('.contents').find('li').addClass('is-hidden');
           $('.contents').find('li').eq(targetNum).removeClass('is-hidden');
         })
