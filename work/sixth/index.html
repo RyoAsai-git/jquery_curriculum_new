@@ -26,6 +26,29 @@
       // .keyup() 文字入力後に発火されるイベントです。
       // .replace(/\s+/g,'').length 改行を含まない文字数を取得します。
       // .val() input要素のvalueを取得します。
+      $(function() {
+        var previous_count = 0;
+        $('input').keyup(function() {
+          var count = $(this).val().replace(/\s+/g,'').length; //文字数を取得
+          count -= previous_count; //今回入力された文字数から前回入力された文字数を引く
+          previous_count += count; //今回入力された文字数を次回使うため保存
+          var rest_count = $('.rest-count').text(); //残った文字数から引く
+          rest_count -= count;
+          $('.rest-count').text(rest_count);
+          if (rest_count < 0) {
+            $('.rest-count').addClass('red');
+          } else {
+            $('.rest-count').removeClass('red');
+          }
+        })
+      });
+      /*
+        入力された文字数を取得
+        残った文字数を取得
+        今回入力された文字数から前回入力された文字数を引く
+        残った文字数から引く
+        画面に表示
+      */
     </script>
   </body>
 </html>
