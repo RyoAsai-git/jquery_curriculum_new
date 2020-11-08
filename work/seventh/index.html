@@ -34,31 +34,37 @@
       // .data() 要素のdata属性を取得します。
       // .width() 要素の幅を取得します。
       // .length 要素の個数を取得します。
+
     $(function(){
-      var test = [];
+      var position = [];
       var slider_width = $('.slider-list').width();
       var slider_length = $('img').length;
       var img_width = slider_width / slider_length;
       $('img').each(function(index) {
-        test[index] = index * -(img_width);
+        position[index] = index * -(img_width);
       });
-      console.log(test);
       var index = 0;
       $('button').click(function(){
         var button_data = $(this).data('ctrl');
         if (button_data === 'next') {
-          console.log('nextです');
           index += 1;
           $('.slider-list').animate({
-            'left' : test[index]
+            'left' : position[index]
           }, 500);
+          if (index === 4) {
+            index = 0;
+            $('.slider-list').animate({
+            'left' : position[index]
+          }, 500);
+          }
         } else {
-          console.log('prevです');
           index -= 1;
           $('.slider-list').animate({
-            'left' : test[index]
+            'left' : position[index]
           }, 500)
-          //0の時にanimateしない処理を追記
+          if (index < 0) {
+            index = 0;
+          }
         }
       });
     })
