@@ -45,15 +45,22 @@
       $(function(){
         $('.menu__btn').click(function(){
           var button_data = $(this).data('scroll-place-type');
-          var test = [];
+          var scroll_data = [];
           $('.title').each(function(){
             var title_data = $(this).data('scroll-place-type');
             var title_position = $(this).offset().top;
-            test[title_data] = title_position;
+            scroll_data[title_data] = title_position;
           })
-          console.log(test[button_data]);
-          $('html, body').animate({ scrollTop: test[button_data] } ,500);
+          $('html, body').animate({ scrollTop: scroll_data[button_data] } ,500);
         });
+        $(this).scroll(function(){
+          var window_position = $(window).scrollTop();
+          if (window_position >= 100) {
+            $('.scrollTopBtn').fadeIn();
+          } else {
+            $('.scrollTopBtn').fadeOut();
+          }
+        })
       })
     </script>
   </body>
