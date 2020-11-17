@@ -72,8 +72,8 @@
 // 第1問  id='q1'の要素の文字色を赤色にせよ。
 $(function() {
   $('#q1').css('color', 'red');
-
-
+　//$(function)の意味
+　
   // 第2問  id='q2'の要素をクリックしたら背景色をピンクにせよ。
   $('#q2').click(function() {
     $('#q2').css('background-color', 'cadetblue');
@@ -109,6 +109,7 @@ $(function() {
   // 第7問  id='q7'の子要素をクリックしたら、その要素のインデックス（何番目か）をconsole.log()とalert()を用いて表示させよ。
   $('#q7').find('li').click(function() {
     var targetNum = $(this).index();
+    //this イベントを発火させた要素
     console.log(targetNum);
     alert(targetNum);
   });
@@ -123,6 +124,7 @@ $(function() {
   // 第9問  id='q9'の要素をクリックしたらこの要素に設定してあるdata属性をconsoleに表示せよ。
   $('#q9').click(function() {
     var text = $(this).data('text');
+    //カスタムデータ属性　-以降
     console.log(text);
   });
 
