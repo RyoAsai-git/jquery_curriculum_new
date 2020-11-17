@@ -104,20 +104,21 @@
                 applicationId: appId, // (今回はこの変数をIDとして使用します) ※メンターから別途渡されるファイルを読み込んでください。
                 booksGenreId: '001',
                 keyword: keyword,
+                // hits: '20',
               },
           }).done(function(data) {
               // この中にデータ取得後の動きを記述していきます。
               console.log(data);
               if (data.count > 0) {
-                $.each(data, function(i, item) {
+                $.each(data.Items, function(i, item) {
                   var test = $(
                     '<li class="lists__item">' + 
                     '<div class="lists__item__inner">' +
-                    '<a href="" class="lists__item__link" target="_blank">' +
-                    '<img src="" class="lists__item__img" alt="">' +
-                    '<p class="lists__item__detail">作品名：' + item.title + '</p>' + 
-                    '<p class="lists__item__detail">作者　：' + item.author +  '</p>' +
-                    '<p class="lists__item__detail">出版社：' + item.publisherName + '</p>' +
+                    '<a href=" ' + item.Item.itemUrl + ' " class="lists__item__link" target="_blank">' +
+                    '<img src=" ' + item.Item.largeImageUrl + ' " class="lists__item__img" alt="">' +
+                    '<p class="lists__item__detail">作品名：' + item.Item.title + '</p>' + 
+                    '<p class="lists__item__detail">作者　：' + item.Item.author +  '</p>' +
+                    '<p class="lists__item__detail">出版社：' + item.Item.publisherName + '</p>' +
                     '</a>' +
                     '</div>' +
                     '</li>'
