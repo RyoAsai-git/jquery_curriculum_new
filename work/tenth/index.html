@@ -112,10 +112,10 @@
               // この中にデータ取得後の動きを記述していきます。
               console.log(data);
               $('ul').empty();
+              $('.message').empty();
               if (data.count > 0) {
-                $('.message').empty();
                 $.each(data.Items, function(i, item) {
-                  var test = $(
+                  var item_data = $(
                     '<li class="lists__item">' + 
                       '<div class="lists__item__inner">' +
                         '<a href=" ' + item.Item.itemUrl + ' " class="lists__item__link" target="_blank">' +
@@ -127,7 +127,7 @@
                       '</div>' +
                     '</li>'
                   )
-                  $('ul').append(test);
+                  $('ul').append(item_data);
 
                 })
                 var pagination = $(
@@ -149,11 +149,10 @@
                     $(".btn-item").addClass('disabled');
                   }
 
-                  // todo pege切替実装
+                  // todo page切替実装
                   // $('btn-item').on('click', function() {
                     $('btn-item').click(function(){
                     if ($('.btn-item').data('js') === 'page-next') {
-                      console.log('次へ');
                     } else {
                       console.log('前へ');
                     }
