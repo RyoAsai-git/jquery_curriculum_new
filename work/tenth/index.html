@@ -105,7 +105,6 @@
                 booksGenreId: '001',
                 keyword: keyword,
                 hits: '20',
-                // page: '100',
               },
           }).done(function(data) {
             //通信成功時の動作
@@ -128,7 +127,6 @@
                     '</li>'
                   )
                   $('ul').append(item_data);
-
                 })
                 var pagination = $(
                   '<div class="pager" data-js="pager">' + 
@@ -148,21 +146,15 @@
                   if (data.page === data.pageCount) {
                     $(".btn-item").addClass('disabled');
                   }
-
-                  // todo page切替実装
-                  // $('btn-item').on('click', function() {
-                    $('btn-item').click(function(){
-                    if ($('.btn-item').data('js') === 'page-next') {
-                    } else {
-                      console.log('前へ');
-                    }
-                  })
-
               } else {
                 var error_message = $('<p class="error-message">検索結果が見つかりませんでした。<br>別のキーワードで検索して下さい。</div>');
                 error_message.css('text-align', 'center');
                 $('.message').append(error_message);
               }
+          }).fail(function(data) {
+            var error_message = $('<p class="error-message">正常に通信ができませんでした。<br>接続状況を確認して下さい。</div>');
+            error_message.css('text-align', 'center');
+            $('.message').append(error_message);
           });
         });
       });
