@@ -111,7 +111,9 @@
             //通信成功時の動作
               // この中にデータ取得後の動きを記述していきます。
               console.log(data);
+              $('ul').empty();
               if (data.count > 0) {
+                $('.message').empty();
                 $.each(data.Items, function(i, item) {
                   var test = $(
                     '<li class="lists__item">' + 
@@ -139,7 +141,29 @@
                     '</div>' +
                   '</div>')
                   $('ul').append(pagination);
-              } //検索結果がない時の表示　検索結果が見つかりませんでした。別のキーワードで検索して下さい。
+
+                  if (data.page <= 1) {
+                    $(".btn-item[data-js='page-prev']").addClass('disabled');
+                  }
+                  if (data.page === data.pageCount) {
+                    $(".btn-item").addClass('disabled');
+                  }
+
+                  // todo pege切替実装
+                  // $('btn-item').on('click', function() {
+                    $('btn-item').click(function(){
+                    if ($('.btn-item').data('js') === 'page-next') {
+                      console.log('次へ');
+                    } else {
+                      console.log('前へ');
+                    }
+                  })
+
+              } else {
+                var error_message = $('<p class="error-message">検索結果が見つかりませんでした。<br>別のキーワードで検索して下さい。</div>');
+                error_message.css('text-align', 'center');
+                $('.message').append(error_message);
+              }
           });
         });
       });
