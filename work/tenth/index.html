@@ -91,6 +91,11 @@
       //     <a class="btn-item" data-js="page-next" href="">次へ</a>
       //   </div>
       // </div>
+
+      //todo 
+      //on clickでのページネーション作成
+      //楽天API　エラー作成
+
       
       $(function(){
         //関数はここ
@@ -105,67 +110,68 @@
           var page = 1;
           ajax(keyword, page);
 
-          $('body').delegate('.btn-item', 'a', 'click', function() {
-            ajax(keyword);
-            console.log(aaa);
+          $('body').on('click', 'a', function(e) {
             e.preventDefault();
             page += 1;
+            var keyword = $('.search__text__input').val();
+            console.log('aaa');
+            ajax(keyword, page);
           })
         });
       });
 
       function ajax(keyword, page) {
         $.ajax({
-            url: 'https://app.rakuten.co.jp/services/api/BooksTotal/Search/20130522',
-            type: 'GET',
-            datatype: 'json',
-            data: {
-              // 「区分:サービス固有パラメーター」を確認して、必要な情報をdata内に入れましょう。
-              applicationId: appId, // (今回はこの変数をIDとして使用します) ※メンターから別途渡されるファイルを読み込んでください。
-              booksGenreId: '001',
-              keyword: keyword,
-              hits: '20',
-              page: page, /*100ページ目出力可能*/
-            },
+          url: 'https://app.rakuten.co.jp/services/api/BooksTotal/Search/20130522',
+          type: 'GET',
+          datatype: 'json',
+          data: {
+            // 「区分:サービス固有パラメーター」を確認して、必要な情報をdata内に入れましょう。
+            applicationId: appId, // (今回はこの変数をIDとして使用します) ※メンターから別途渡されるファイルを読み込んでください。
+            booksGenreId: '001',
+            keyword: keyword,
+            hits: '20',
+            page: page, /*100ページ目出力可能*/
+          },
+
         }).done(function(data) {
           //通信成功時の動作
-            // この中にデータ取得後の動きを記述していきます。
-            console.log(data);
-            console.log(data.page)
-          
+          // この中にデータ取得後の動きを記述していきます。
+          console.log(data);
+          $('ul').empty();
+          $('.message').empty();
+          if (data.count > 0) {
+            $.each(data.Items, function(i, item) {
+              var item_data = $(
+                '<li class="lists__item">' + 
+                  '<div class="lists__item__inner">' +
+                    '<a href=" ' + item.Item.itemUrl + ' " class="lists__item__link" target="_blank">' +
+                      '<img src=" ' + item.Item.largeImageUrl + ' " class="lists__item__img" alt="">' +
+                      '<p class="lists__item__detail">作品名：' + item.Item.title + '</p>' + 
+                      '<p class="lists__item__detail">作者　：' + item.Item.author +  '</p>' +
+                      '<p class="lists__item__detail">出版社：' + item.Item.publisherName + '</p>' +
+                    '</a>' +
+                  '</div>' +
+                '</li>'
+              )
+              $('ul').append(item_data);
+            })
             
-            $('ul').empty();
-            $('.message').empty();
-            if (data.count > 0) {
-              $.each(data.Items, function(i, item) {
-                var item_data = $(
-                  '<li class="lists__item">' + 
-                    '<div class="lists__item__inner">' +
-                      '<a href=" ' + item.Item.itemUrl + ' " class="lists__item__link" target="_blank">' +
-                        '<img src=" ' + item.Item.largeImageUrl + ' " class="lists__item__img" alt="">' +
-                        '<p class="lists__item__detail">作品名：' + item.Item.title + '</p>' + 
-                        '<p class="lists__item__detail">作者　：' + item.Item.author +  '</p>' +
-                        '<p class="lists__item__detail">出版社：' + item.Item.publisherName + '</p>' +
-                      '</a>' +
-                    '</div>' +
-                  '</li>'
-                )
-                $('ul').append(item_data);
-              })
-              
-              pagination(data);
+            pagination(data);
                 
-            } else {
-              var error_message = $('<p class="error-message">検索結果が見つかりませんでした。<br>別のキーワードで検索して下さい。</div>');
-              error_message.css('text-align', 'center');
-              $('.message').append(error_message);
-            }
+          } else {
+            var error_message = $('<p class="error-message">検索結果が見つかりませんでした。<br>別のキーワードで検索して下さい。</div>');
+            error_message.css('text-align', 'center');
+            $('.message').append(error_message);
+          }
+
         }).fail(function(data) {
           //エラー内容 エラー
           // エラー内容はHTTPステータスコードとレスポンスボディから判断できます。
           var error_message = $('<p class="error-message">正常に通信ができませんでした。<br>接続状況を確認して下さい。</div>');
           error_message.css('text-align', 'center');
           $('.message').append(error_message);
+          // console.log(jqXHR.responseJSON);
         });
       }
       
@@ -208,11 +214,6 @@
           // });
 
 
-          $('body').delegate('.btn-item', 'a', 'click', function() {
-            console.log(aaa);
-            e.preventDefault();
-            page += 1;
-          })
       }
     </script>
   
