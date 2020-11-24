@@ -92,21 +92,8 @@
       //   </div>
       // </div>
 
-      //todo 
-      //on clickでのページネーション作成//
-      //楽天API　エラー作成//
-      //商品リンク飛べない //
-
-      
       $(function(){
-        //関数はここ
-        //ajax 
-        //
-        //変数定義 トリガー 関数
-        $('.search__btn').on('click', function(){//読み込み時点　
-          // btn  onを調べる 第二引数　selector 検索範囲 div
-          // body要素のなかに存在する body.on(第二引数ページャ)
-          //後から追加するよう
+        $('.search__btn').on('click', function(){
           var keyword = $('.search__text__input').val();
           var page = 1;
           ajax(keyword, page);
@@ -136,7 +123,7 @@
             booksGenreId: '001',
             keyword: keyword,
             hits: '20',
-            page: page, /*100ページ目出力可能*/
+            page: page
           },
 
         }).done(function(data) {
@@ -166,26 +153,24 @@
                 
           } else {
             var error_message = $('<p class="error-message">検索結果が見つかりませんでした。<br>別のキーワードで検索して下さい。</div>');
-            error_message.css('text-align', 'center');
             $('.message').append(error_message);
           }
 
         }).fail(function(data,XMLHttpRequest, textStatus, errorThrown) {
           $('.message').empty();
           if (textStatus === '400') {
-            error_message = 'パラメーターエラー (必須パラメータ不足)';
+            error_message = $('<p class="error-message">パラメーターエラー (必須パラメータ不足)</div>')
           } else if (textStatus === '404') {
-            error_message = '対象のデータが存在しなかった場合';
+            error_message = $('<p class="error-message">対象のデータが存在しなかった場合</div>')
           } else if (textStatus === '429') {
-            error_message = 'リクエスト過多 (各ユーザ制限値超過)';
+            error_message = $('<p class="error-message">リクエスト過多 (各ユーザ制限値超過)</div>')
           } else if (textStatus === '500') {
-            error_message = '	楽天ウェブサービス内のエラー';
+            error_message = $('<p class="error-message">楽天ウェブサービス内のエラー</div>')
           } else if (textStatus === '503') {
-            error_message = 'メンテナンス・リクエスト過多 (全ユーザ制限値超過)';
+            error_message = $('<p class="error-message">メンテナンス・リクエスト過多 (全ユーザ制限値超過)</div>')
           } else {
-            error_message = '予期せぬエラーが発生しました';
+            error_message = $('<p class="error-message">予期せぬエラーが発生しました</div>')
           }
-
           $('.message').append(error_message);
         });
       }
