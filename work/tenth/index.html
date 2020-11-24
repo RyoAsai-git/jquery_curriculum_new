@@ -93,6 +93,7 @@
       // </div>
 
       $(function(){
+        
         $('.search__btn').on('click', function() {
           var keyword = $('.search__text__input').val();
           var page = 1;
@@ -100,16 +101,21 @@
 
         });
         //トリガー内にトリガーは書かないケース多い
-        
         $('body').on('click', '.btn-item', function(e) {
           //event イベント動く イベントが aタグの処理 
           //error
+          var keyword = $('.search__text__input').val();
+          var page = 1;
+
           e.preventDefault();
           var page_direction = $(this).data('js');
         
           // if (page === 1) {
           //   return false;
           // }
+          if (page === 1) {
+
+          }
 
           if (page_direction === 'page-next') {
             //next maxpage = 1 or pagecount === maxpage {
@@ -152,15 +158,49 @@
 
           // 関数化
           // clearPageData
-          $('ul').empty();
-          $('.message').empty();
+
+          empty();
 
           //関数化
-          //if 多い方を後にする 例外を先
-          //0を先
+
 
           //fizz buzz 3と5の公倍数は限定 3倍数 5の倍数
-          if (data.count > 0) {
+
+          showData(data);
+
+        }).fail(function(error) {
+          console.log(error.status);
+          //関数
+          empty();
+          console.log(error.status);
+          switch (error.status) {
+            case 400:
+              error_message = $('<p class="error-message">パラメーターエラー (必須パラメータ不足)</div>');
+              break;
+            case 404:
+              error_message = $('<p class="error-message">対象のデータが存在しなかった場合</div>');
+              break;
+            case 429:
+              error_message = error_message = $('<p class="error-message">リクエスト過多 (各ユーザ制限値超過)</div>');
+              break;
+            case 500:
+              error_message = $('<p class="error-message">楽天ウェブサービス内のエラー</div>');
+              break;
+            case 503:
+              error_message = $('<p class="error-message">メンテナンス・リクエスト過多 (全ユーザ制限値超過)</div>');
+              break;
+            default:
+              error_message = $('<p class="error-message">予期せぬエラーが発生しました</div>');
+              break;
+          }
+          $('.message').append(error_message);
+        });
+      }
+
+      function showData(data) {
+        //if 多い方を後にする 例外を先
+        //0を先
+        if (data.count > 0) {
             var item_data = '';
             $.each(data.Items, function(i, item) {
               //毎回リセット
@@ -175,48 +215,21 @@
                     '</a>' +
                   '</div>' +
                 '</li>'
-              
             })
             $('ul').append(item_data); //
             
             //関数名変更　表示するニュアンス
-            pagination(data);
+            showPagination(data);
                 
           } else {
             //0件は通信成功
             //通信成功時 200
-            var error_message = $('<p class="error-message">検索結果が見つかりませんでした。<br>別のキーワードで検索して下さい。</div>');
+            var error_message = $('<p class="error-message">検索結果が見つかりませんでした。<br>別のキーワードで検索して下さい。</p>');
             $('.message').append(error_message);
           }
-
-        }).fail(function(error, XMLHttpRequest, textStatus, errorThrown) {
-          //error.status
-          //empty()が必要
-          console.log(error);
-          //関数
-          //switch jQuery レスポンス後に動かす
-          $('.message').empty();
-          console.log(textStatus);
-          if (textStatus === '400') {
-            error_message = $('<p class="error-message">パラメーターエラー (必須パラメータ不足)</div>')
-          } else if (textStatus === '404') {
-            error_message = $('<p class="error-message">対象のデータが存在しなかった場合</div>')
-          } else if (textStatus === '429') {
-            error_message = $('<p class="error-message">リクエスト過多 (各ユーザ制限値超過)</div>')
-          } else if (textStatus === '500') {
-            error_message = $('<p class="error-message">楽天ウェブサービス内のエラー</div>')
-          } else if (textStatus === '503') {
-            error_message = $('<p class="error-message">メンテナンス・リクエスト過多 (全ユーザ制限値超過)</div>')
-          } else {
-            error_message = $('<p class="error-message">予期せぬエラーが発生しました</div>')
-          }
-          $('.message').append(error_message);
-        });
       }
       
-      function pagination(data) {
-        //+なくても良い
-        //+ない方が
+      function showPagination(data) {
         var pagination = 
           '<div class="pager" data-js="pager">' + 
             '<div class="counter">' + 
@@ -240,9 +253,18 @@
           // if (data.page <= 1 && data.page === data.pageCount) {
           //   $(".btn-item").addClass('disabled');
           // }
+
+          
+      }
+
+      function empty() {
+        $('ul').empty();
+        $('.message').empty();
       }
       //最終ページ　次　disabledなってない
       //エラー文 
+
+      
     </script>
   
   </body>
