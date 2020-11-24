@@ -91,73 +91,131 @@
       //     <a class="btn-item" data-js="page-next" href="">次へ</a>
       //   </div>
       // </div>
-
+      
       $(function(){
-        $('.search__btn').on('click', function(){
+        //関数はここ
+        //ajax 
+        //
+        //変数定義 トリガー 関数
+        $('.search__btn').on('click', function(){//読み込み時点　
+          // btn  onを調べる 第二引数　selector 検索範囲 div
+          // body要素のなかに存在する body.on(第二引数ページャ)
+          //後から追加するよう
           var keyword = $('.search__text__input').val();
-          $.ajax({
-              url: 'https://app.rakuten.co.jp/services/api/BooksTotal/Search/20130522',
-              type: 'GET',
-              datatype: 'json',
-              data: {
-                // 「区分:サービス固有パラメーター」を確認して、必要な情報をdata内に入れましょう。
-                applicationId: appId, // (今回はこの変数をIDとして使用します) ※メンターから別途渡されるファイルを読み込んでください。
-                booksGenreId: '001',
-                keyword: keyword,
-                hits: '20',
-              },
-          }).done(function(data) {
-            //通信成功時の動作
-              // この中にデータ取得後の動きを記述していきます。
-              console.log(data);
-              $('ul').empty();
-              $('.message').empty();
-              if (data.count > 0) {
-                $.each(data.Items, function(i, item) {
-                  var item_data = $(
-                    '<li class="lists__item">' + 
-                      '<div class="lists__item__inner">' +
-                        '<a href=" ' + item.Item.itemUrl + ' " class="lists__item__link" target="_blank">' +
-                          '<img src=" ' + item.Item.largeImageUrl + ' " class="lists__item__img" alt="">' +
-                          '<p class="lists__item__detail">作品名：' + item.Item.title + '</p>' + 
-                          '<p class="lists__item__detail">作者　：' + item.Item.author +  '</p>' +
-                          '<p class="lists__item__detail">出版社：' + item.Item.publisherName + '</p>' +
-                        '</a>' +
-                      '</div>' +
-                    '</li>'
-                  )
-                  $('ul').append(item_data);
-                })
-                var pagination = $(
-                  '<div class="pager" data-js="pager">' + 
-                    '<div class="counter">' + 
-                      '<span class="counter-current">' + data.page + '</span>/<span class="counter-all">'+ data.pageCount +'</span>' +
-                    '</div>' +
-                    '<div class="btn-wrapper">' +
-                      '<a class="btn-item" data-js="page-prev" href="">前へ</a>' +
-                      '<a class="btn-item" data-js="page-next" href="">次へ</a>' +
-                    '</div>' +
-                  '</div>')
-                  $('ul').append(pagination);
+          var page = 1;
+          ajax(keyword, page);
 
-                  if (data.page <= 1) {
-                    $(".btn-item[data-js='page-prev']").addClass('disabled');
-                  }
-                  if (data.page === data.pageCount) {
-                    $(".btn-item").addClass('disabled');
-                  }
-              } else {
-                var error_message = $('<p class="error-message">検索結果が見つかりませんでした。<br>別のキーワードで検索して下さい。</div>');
-                error_message.css('text-align', 'center');
-                $('.message').append(error_message);
-              }
-          }).fail(function(data) {
-            var error_message = $('<p class="error-message">正常に通信ができませんでした。<br>接続状況を確認して下さい。</div>');
-            error_message.css('text-align', 'center');
-            $('.message').append(error_message);
-          });
+          $('body').delegate('.btn-item', 'a', 'click', function() {
+            ajax(keyword);
+            console.log(aaa);
+            e.preventDefault();
+            page += 1;
+          })
         });
       });
+
+      function ajax(keyword, page) {
+        $.ajax({
+            url: 'https://app.rakuten.co.jp/services/api/BooksTotal/Search/20130522',
+            type: 'GET',
+            datatype: 'json',
+            data: {
+              // 「区分:サービス固有パラメーター」を確認して、必要な情報をdata内に入れましょう。
+              applicationId: appId, // (今回はこの変数をIDとして使用します) ※メンターから別途渡されるファイルを読み込んでください。
+              booksGenreId: '001',
+              keyword: keyword,
+              hits: '20',
+              page: page, /*100ページ目出力可能*/
+            },
+        }).done(function(data) {
+          //通信成功時の動作
+            // この中にデータ取得後の動きを記述していきます。
+            console.log(data);
+            console.log(data.page)
+          
+            
+            $('ul').empty();
+            $('.message').empty();
+            if (data.count > 0) {
+              $.each(data.Items, function(i, item) {
+                var item_data = $(
+                  '<li class="lists__item">' + 
+                    '<div class="lists__item__inner">' +
+                      '<a href=" ' + item.Item.itemUrl + ' " class="lists__item__link" target="_blank">' +
+                        '<img src=" ' + item.Item.largeImageUrl + ' " class="lists__item__img" alt="">' +
+                        '<p class="lists__item__detail">作品名：' + item.Item.title + '</p>' + 
+                        '<p class="lists__item__detail">作者　：' + item.Item.author +  '</p>' +
+                        '<p class="lists__item__detail">出版社：' + item.Item.publisherName + '</p>' +
+                      '</a>' +
+                    '</div>' +
+                  '</li>'
+                )
+                $('ul').append(item_data);
+              })
+              
+              pagination(data);
+                
+            } else {
+              var error_message = $('<p class="error-message">検索結果が見つかりませんでした。<br>別のキーワードで検索して下さい。</div>');
+              error_message.css('text-align', 'center');
+              $('.message').append(error_message);
+            }
+        }).fail(function(data) {
+          //エラー内容 エラー
+          // エラー内容はHTTPステータスコードとレスポンスボディから判断できます。
+          var error_message = $('<p class="error-message">正常に通信ができませんでした。<br>接続状況を確認して下さい。</div>');
+          error_message.css('text-align', 'center');
+          $('.message').append(error_message);
+        });
+      }
+      
+      function pagination(data) {
+        var pagination = $(
+          '<div class="pager" data-js="pager">' + 
+            '<div class="counter">' + 
+              '<span class="counter-current">' + data.page + '</span>/<span class="counter-all">'+ data.pageCount +'</span>' +
+            '</div>' +
+            '<div class="btn-wrapper">' +
+              '<a class="btn-item" data-js="page-prev" href="">前へ</a>' +
+              '<a class="btn-item" data-js="page-next" href="">次へ</a>' +
+            '</div>' +
+          '</div>')
+          $('ul').append(pagination);
+
+          if (data.page <= 1) {
+            $(".btn-item[data-js='page-prev']").addClass('disabled');
+          } else if (data.page === data.pageCount) {
+            $(".btn-item[data-js='page-next']").addClass('disabled');
+          }
+
+          if (data.page <= 1 && data.page === data.pageCount) {
+            $(".btn-item").addClass('disabled');
+          }
+
+          // $('.btn-item, a').on('click', function() {
+          //     e.preventDefault(); 
+          //     //html用意 aタグ非同期 aタグ 
+          //     //return false
+          //     //カーソルポインターにしてくれる
+          //     //submit 要素
+          //     //urlついていないaタグ
+          //     //+= 1 次へ
+          //     //-= 1 前へ
+          //     // data.page += 1;
+          //     //ajax 関数化
+          //     //ページャ 
+          //     console.log(data);
+          // });
+
+
+          $('body').delegate('.btn-item', 'a', 'click', function() {
+            console.log(aaa);
+            e.preventDefault();
+            page += 1;
+          })
+      }
     </script>
+  
   </body>
 </html>
+
