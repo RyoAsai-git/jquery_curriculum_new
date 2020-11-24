@@ -112,10 +112,14 @@
 
           $('body').on('click', 'a', function(e) {
             e.preventDefault();
-            page += 1;
             var keyword = $('.search__text__input').val();
-            console.log('aaa');
-            ajax(keyword, page);
+            if (test === 'page-next') {
+              page += 1;
+              ajax(keyword, page);
+            } else {
+              page -= 1;
+              ajax(keyword, page);
+            }
           })
         });
       });
@@ -168,6 +172,7 @@
         }).fail(function(data) {
           //エラー内容 エラー
           // エラー内容はHTTPステータスコードとレスポンスボディから判断できます。
+          //error文が複数表示されてしまう
           var error_message = $('<p class="error-message">正常に通信ができませんでした。<br>接続状況を確認して下さい。</div>');
           error_message.css('text-align', 'center');
           $('.message').append(error_message);
