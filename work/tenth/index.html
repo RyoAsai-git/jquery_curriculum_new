@@ -93,29 +93,46 @@
       // </div>
 
       $(function(){
-        $('.search__btn').on('click', function(){
+        $('.search__btn').on('click', function() {
           var keyword = $('.search__text__input').val();
           var page = 1;
           ajax(keyword, page);
 
-          $('body').on('click', '.btn-item', function(e) {
-            e.preventDefault();
-            var page_direction = $(this).data('js');
-            if (page_direction === 'page-next') {
-              page += 1;
-              ajax(keyword, page);
-            } else {
-              page -= 1;
-              ajax(keyword, page);
-            }
-          })
         });
-      });
+        //トリガー内にトリガーは書かないケース多い
+        
+        $('body').on('click', '.btn-item', function(e) {
+          //event イベント動く イベントが aタグの処理 
+          //error
+          e.preventDefault();
+          var page_direction = $(this).data('js');
+        
+          // if (page === 1) {
+          //   return false;
+          // }
 
+          if (page_direction === 'page-next') {
+            //next maxpage = 1 or pagecount === maxpage {
+            //}
+            page += 1;
+          // ajax(keyword, page);
+          } else if(page_direction === 'page-prev') {
+            if (page === 1) {
+              return false;
+            }
+            page -= 1;
+          }
+          ajax(keyword, page);
+          //getBookData
+        })
+      });
+      
       function ajax(keyword, page) {
         $.ajax({
           url: 'https://app.rakuten.co.jp/services/api/BooksTotal/Search/20130522',
-          type: 'GET',
+          type: 'GET',//Httpリクエスト パラメーター 通信先に送りたいデータ data
+          //get urlにのせて post bodyにのせて 
+          //検索get bookmarkにパラメーターのせておくと googleMeets 
           datatype: 'json',
           data: {
             // 「区分:サービス固有パラメーター」を確認して、必要な情報をdata内に入れましょう。
@@ -129,12 +146,25 @@
         }).done(function(data) {
           //通信成功時の動作
           // この中にデータ取得後の動きを記述していきます。
+          // 関数化
+          //showBookData
           console.log(data);
+
+          // 関数化
+          // clearPageData
           $('ul').empty();
           $('.message').empty();
+
+          //関数化
+          //if 多い方を後にする 例外を先
+          //0を先
+
+          //fizz buzz 3と5の公倍数は限定 3倍数 5の倍数
           if (data.count > 0) {
+            var item_data = '';
             $.each(data.Items, function(i, item) {
-              var item_data = $(
+              //毎回リセット
+              item_data += 
                 '<li class="lists__item">' + 
                   '<div class="lists__item__inner">' +
                     '<a href=" ' + item.Item.itemUrl + ' " class="lists__item__link" target="_blank">' +
@@ -145,19 +175,28 @@
                     '</a>' +
                   '</div>' +
                 '</li>'
-              )
-              $('ul').append(item_data);
+              
             })
+            $('ul').append(item_data); //
             
+            //関数名変更　表示するニュアンス
             pagination(data);
                 
           } else {
+            //0件は通信成功
+            //通信成功時 200
             var error_message = $('<p class="error-message">検索結果が見つかりませんでした。<br>別のキーワードで検索して下さい。</div>');
             $('.message').append(error_message);
           }
 
-        }).fail(function(data,XMLHttpRequest, textStatus, errorThrown) {
+        }).fail(function(error, XMLHttpRequest, textStatus, errorThrown) {
+          //error.status
+          //empty()が必要
+          console.log(error);
+          //関数
+          //switch jQuery レスポンス後に動かす
           $('.message').empty();
+          console.log(textStatus);
           if (textStatus === '400') {
             error_message = $('<p class="error-message">パラメーターエラー (必須パラメータ不足)</div>')
           } else if (textStatus === '404') {
@@ -176,7 +215,9 @@
       }
       
       function pagination(data) {
-        var pagination = $(
+        //+なくても良い
+        //+ない方が
+        var pagination = 
           '<div class="pager" data-js="pager">' + 
             '<div class="counter">' + 
               '<span class="counter-current">' + data.page + '</span>/<span class="counter-all">'+ data.pageCount +'</span>' +
@@ -185,19 +226,23 @@
               '<a class="btn-item" data-js="page-prev" href="">前へ</a>' +
               '<a class="btn-item" data-js="page-next" href="">次へ</a>' +
             '</div>' +
-          '</div>')
+          '</div>'
           $('ul').append(pagination);
 
           if (data.page <= 1) {
             $(".btn-item[data-js='page-prev']").addClass('disabled');
-          } else if (data.page === data.pageCount) {
+          }
+
+          if (data.page === data.pageCount) {
             $(".btn-item[data-js='page-next']").addClass('disabled');
           }
 
-          if (data.page <= 1 && data.page === data.pageCount) {
-            $(".btn-item").addClass('disabled');
-          }
+          // if (data.page <= 1 && data.page === data.pageCount) {
+          //   $(".btn-item").addClass('disabled');
+          // }
       }
+      //最終ページ　次　disabledなってない
+      //エラー文 
     </script>
   
   </body>
