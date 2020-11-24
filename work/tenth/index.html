@@ -112,8 +112,8 @@
 
           $('body').on('click', 'a', function(e) {
             e.preventDefault();
-            var keyword = $('.search__text__input').val();
-            if (test === 'page-next') {
+            var page_direction = $(this).data('js');
+            if (page_direction === 'page-next') {
               page += 1;
               ajax(keyword, page);
             } else {
@@ -202,23 +202,6 @@
           if (data.page <= 1 && data.page === data.pageCount) {
             $(".btn-item").addClass('disabled');
           }
-
-          // $('.btn-item, a').on('click', function() {
-          //     e.preventDefault(); 
-          //     //html用意 aタグ非同期 aタグ 
-          //     //return false
-          //     //カーソルポインターにしてくれる
-          //     //submit 要素
-          //     //urlついていないaタグ
-          //     //+= 1 次へ
-          //     //-= 1 前へ
-          //     // data.page += 1;
-          //     //ajax 関数化
-          //     //ページャ 
-          //     console.log(data);
-          // });
-
-
       }
     </script>
   
