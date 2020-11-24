@@ -156,22 +156,14 @@
           //showBookData
           console.log(data);
 
-          // 関数化
-          // clearPageData
-
-          empty();
-
-          //関数化
-
-
-          //fizz buzz 3と5の公倍数は限定 3倍数 5の倍数
-
-          showData(data);
+          clearPageData();
+          
+          showBookData(data);
 
         }).fail(function(error) {
           console.log(error.status);
           //関数
-          empty();
+          clearPageData();
           console.log(error.status);
           switch (error.status) {
             case 400:
@@ -197,7 +189,7 @@
         });
       }
 
-      function showData(data) {
+      function showBookData(data) {
         //if 多い方を後にする 例外を先
         //0を先
         if (data.count > 0) {
@@ -257,7 +249,7 @@
           
       }
 
-      function empty() {
+      function clearPageData() {
         $('ul').empty();
         $('.message').empty();
       }
