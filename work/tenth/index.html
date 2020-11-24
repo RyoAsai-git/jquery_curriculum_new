@@ -93,8 +93,9 @@
       // </div>
 
       //todo 
-      //on clickでのページネーション作成
+      //on clickでのページネーション作成//
       //楽天API　エラー作成
+      //商品リンク飛べない
 
       
       $(function(){
@@ -110,7 +111,7 @@
           var page = 1;
           ajax(keyword, page);
 
-          $('body').on('click', 'a', function(e) {
+          $('body').on('click', '.btn-item', function(e) {
             e.preventDefault();
             var page_direction = $(this).data('js');
             if (page_direction === 'page-next') {
