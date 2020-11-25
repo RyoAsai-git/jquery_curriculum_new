@@ -94,19 +94,19 @@
 
       $(function(){
         // var page = 1;
-        var page = 1;
+        // var page = 1;
         $('.search__btn').on('click', function() {
           var keyword = $('.search__text__input').val();
-          // var page = 1;
+          var page = 1;
           getBookData(keyword, page);
 
         });
 
         $('body').on('click', '.btn-item', function(e) {
           var keyword = $('.search__text__input').val();
-          // var page = 1;
+          var page = 1;
           
-          
+          // console.log(data);
           e.preventDefault();
           var page_direction = $(this).data('js');
           // if (page_direction === 'page-next') {
@@ -160,7 +160,7 @@
           // 関数化
           //showBookData
           console.log(data);
-
+          
           clearPageData();
 
           showBookData(data);
