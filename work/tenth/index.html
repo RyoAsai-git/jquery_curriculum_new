@@ -93,47 +93,52 @@
       // </div>
 
       $(function(){
-        
+        // var page = 1;
+        var page = 1;
         $('.search__btn').on('click', function() {
           var keyword = $('.search__text__input').val();
-          var page = 1;
-          ajax(keyword, page);
+          // var page = 1;
+          getBookData(keyword, page);
 
         });
-        //トリガー内にトリガーは書かないケース多い
-        $('body').on('click', '.btn-item', function(e) {
-          //event イベント動く イベントが aタグの処理 
-          //error
-          var keyword = $('.search__text__input').val();
-          var page = 1;
 
+        $('body').on('click', '.btn-item', function(e) {
+          var keyword = $('.search__text__input').val();
+          // var page = 1;
+          
+          
           e.preventDefault();
           var page_direction = $(this).data('js');
-        
-          // if (page === 1) {
-          //   return false;
+          // if (page_direction === 'page-next') {
+          //   //next maxpage = 1 or pagecount === maxpage {
+          //   //}
+          //   page += 1;
+          // // ajax(keyword, page);
+          // } else if(page_direction === 'page-prev') {
+          //   if (page === 1) {
+          //     return false;
+          //   }
+          //   page -= 1;
           // }
-          if (page === 1) {
-
-          }
-
+          
           if (page_direction === 'page-next') {
-            //next maxpage = 1 or pagecount === maxpage {
-            //}
+            // if (data.page === data.pageCount) {
+            //   return false;
+            // }
+            
             page += 1;
-          // ajax(keyword, page);
-          } else if(page_direction === 'page-prev') {
+          } else if (page_direction === 'page-prev') {
             if (page === 1) {
               return false;
             }
             page -= 1;
           }
-          ajax(keyword, page);
-          //getBookData
+          getBookData(keyword, page);
+
         })
       });
       
-      function ajax(keyword, page) {
+      function getBookData(keyword, page) {
         $.ajax({
           url: 'https://app.rakuten.co.jp/services/api/BooksTotal/Search/20130522',
           type: 'GET',//Httpリクエスト パラメーター 通信先に送りたいデータ data
@@ -157,7 +162,7 @@
           console.log(data);
 
           clearPageData();
-          
+
           showBookData(data);
 
         }).fail(function(error) {
