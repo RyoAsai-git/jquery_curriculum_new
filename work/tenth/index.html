@@ -92,21 +92,19 @@
       //   </div>
       // </div>
 
-      $(function(){
-        // var page = 1;
+      $(function() {
+        var page = 0;
         $('.search__btn').on('click', function() {
           var keyword = $('.search__text__input').val();
-          var page = 1;
+          page = 1;
           getBookData(keyword, page);
-
         });
 
-        $('body').on('click', '.btn-item', function(e) {
+        $('body').on('click', '.btn-item', page, function(e) {
           var keyword = $('.search__text__input').val();
-          var page = 1;
-          
-          // console.log(data);
           e.preventDefault();
+          // console.log(data.page);
+          
           var page_direction = $(this).data('js');
           // if (page_direction === 'page-next') {
           //   //next maxpage = 1 or pagecount === maxpage {
@@ -124,7 +122,6 @@
             // if (data.page === data.pageCount) {
             //   return false;
             // }
-            
             page += 1;
           } else if (page_direction === 'page-prev') {
             if (page === 1) {
@@ -133,7 +130,6 @@
             page -= 1;
           }
           getBookData(keyword, page);
-
         })
       });
       
@@ -152,18 +148,17 @@
             hits: '20',
             page: page
           },
-
+          
         }).done(function(data) {
           //通信成功時の動作
           // この中にデータ取得後の動きを記述していきます。
           // 関数化
           //showBookData
           console.log(data);
-          
+
           clearPageData();
 
           showBookData(data);
-
         }).fail(function(error) {
           console.log(error.status);
           //関数
@@ -190,7 +185,9 @@
               break;
           }
           $('.message').append(error_message);
+
         });
+        
       }
 
       function showBookData(data) {
@@ -216,7 +213,7 @@
             
             //関数名変更　表示するニュアンス
             showPagination(data);
-                
+
           } else {
             //0件は通信成功
             //通信成功時 200
