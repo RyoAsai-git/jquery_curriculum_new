@@ -93,11 +93,8 @@
       // </div>
 
       $(function() {
-        var page = 0;
+        var page = '';
         var keyword = '';
-        var now_page = '';
-        var last_page = '';
-        
         $('.search__btn').on('click', function() {
           keyword = $('.search__text__input').val();
           page = 1;
@@ -105,47 +102,20 @@
         });
 
         $('body').on('click', '.btn-item', function(e) {
-          // var keyword = $('.search__text__input').val();
-          //keyword
-          //次を押した後keywordを更新する
-          //グローバル変数を見に行く
           e.preventDefault();
-          // console.log(data.page);
-          
           var page_direction = $(this).data('js');
-          // if (page_direction === 'page-next') {
-          //   //next maxpage = 1 or pagecount === maxpage {
-          //   //}
-          //   page += 1;
-          // // ajax(keyword, page);
-          // } else if(page_direction === 'page-prev') {
-          //   if (page === 1) {
-          //     return false;
-          //   }
-          //   page -= 1;
-          // }
-          //グローバル変数に書き込む
-          
           if (page_direction === 'page-next') {
-            // if (data.page === data.pageCount) {
-            //   return false;
-            // }
             if ($(this).hasClass('disabled')) {
               return false;
             }
-            // disabled を持っているか判断。
             page += 1;
           } else if (page_direction === 'page-prev') {
-            // if (page === 1) {
-            //   return false;
-            // }
             if ($(this).hasClass('disabled')) {
               return false;
             }
             page -= 1;
           }
           getBookData(keyword, page);
-          //ajaxはグルーバル変数からわたす
         })
       });
       
@@ -160,16 +130,12 @@
             // 「区分:サービス固有パラメーター」を確認して、必要な情報をdata内に入れましょう。
             applicationId: appId, // (今回はこの変数をIDとして使用します) ※メンターから別途渡されるファイルを読み込んでください。
             booksGenreId: '001',
-            keyword: keyword, //グローバル変数
+            keyword: keyword, //グローバル変数から探してくれる
             hits: '20',
-            page: page
+            page: page,
           },
           
         }).done(function(data) {
-          //通信成功時の動作
-          // この中にデータ取得後の動きを記述していきます。
-          // 関数化
-          //showBookData
           console.log(data);
 
           clearPageData();
@@ -207,8 +173,8 @@
       }
 
       function showBookData(data) {
-        //if 多い方を後にする 例外を先
-        //0を先
+        // if 多い方を後にする 例外を先
+        // 0を先
         if (data.count > 0) {
             var item_data = '';
             $.each(data.Items, function(i, item) {
@@ -236,12 +202,36 @@
             var error_message = $('<p class="error-message">検索結果が見つかりませんでした。<br>別のキーワードで検索して下さい。</p>');
             $('.message').append(error_message);
           }
+
+        // if (data.count < 0) {
+        //   //0件は通信成功
+        //   //通信成功時 200
+        //   var error_message = $('<p class="error-message">検索結果が見つかりませんでした。<br>別のキーワードで検索して下さい。</p>');
+        //   $('.message').append(error_message);
+        // } else {
+        //   var item_data = '';
+        //   $.each(data.Items, function(i, item) {
+        //     //毎回リセット
+        //     item_data += 
+        //       '<li class="lists__item">' + 
+        //         '<div class="lists__item__inner">' +
+        //           '<a href=" ' + item.Item.itemUrl + ' " class="lists__item__link" target="_blank">' +
+        //             '<img src=" ' + item.Item.largeImageUrl + ' " class="lists__item__img" alt="">' +
+        //             '<p class="lists__item__detail">作品名：' + item.Item.title + '</p>' + 
+        //             '<p class="lists__item__detail">作者　：' + item.Item.author +  '</p>' +
+        //             '<p class="lists__item__detail">出版社：' + item.Item.publisherName + '</p>' +
+        //           '</a>' +
+        //         '</div>' +
+        //       '</li>'
+        //   });
+        //   $('ul').append(item_data); //
+          
+        //   //関数名変更　表示するニュアンス
+        //   showPagination(data);
+        // }
       }
       
       function showPagination(data) {
-        now_page = data.page;
-        last_page = data.pageCount;
-        //再代入
         var pagination = 
           '<div class="pager" data-js="pager">' + 
             '<div class="counter">' + 
@@ -261,12 +251,6 @@
           if (data.page === data.pageCount) {
             $(".btn-item[data-js='page-next']").addClass('disabled');
           }
-
-          // if (data.page <= 1 && data.page === data.pageCount) {
-          //   $(".btn-item").addClass('disabled');
-          // }
-
-          
       }
 
       function clearPageData() {
