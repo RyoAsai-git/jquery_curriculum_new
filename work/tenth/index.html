@@ -96,7 +96,6 @@
         var page = null;
         var keyword = '';
         $("[data-js='search-btn']").on('click', function() {
-          // keyword = $('.search__text__input').val();
           keyword = $("[data-js='search-word']").val();
           page = 1;
           getBookData(keyword, page);
@@ -104,26 +103,18 @@
 
         $(document).on('click', "[data-js='page-next']", function(e) {
           e.preventDefault();
-          // var page_direction = $(this).data('js');
-          // if (page_direction === 'page-next') {
           if ($(this).hasClass('disabled')) {
             return false;
           }
           page += 1;
-          // }
           getBookData(keyword, page);
         })
-        //document 組み込み
-        //body ブラウザごとに予期せぬ動作
         $(document).on('click', "[data-js='page-prev']", function(e) {
           e.preventDefault();
-          // var page_direction = $(this).data('js');
-          // if (page_direction === 'page-prev') {
           if ($(this).hasClass('disabled')) {
             return false;
           }
           page -= 1;
-          // }
           getBookData(keyword, page);
         }) 
       });
