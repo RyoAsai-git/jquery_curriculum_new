@@ -118,23 +118,20 @@
           getBookData(keyword, page);
         })
       });
-      
+
       function getBookData(keyword, page) {
         $.ajax({
           url: 'https://app.rakuten.co.jp/services/api/BooksTotal/Search/20130522',
-          type: 'GET',//Httpリクエスト パラメーター 通信先に送りたいデータ data
-          //get urlにのせて post bodyにのせて 
-          //検索get bookmarkにパラメーターのせておくと googleMeets 
+          type: 'GET',
           datatype: 'json',
           data: {
             // 「区分:サービス固有パラメーター」を確認して、必要な情報をdata内に入れましょう。
             applicationId: appId, // (今回はこの変数をIDとして使用します) ※メンターから別途渡されるファイルを読み込んでください。
             booksGenreId: '001',
-            keyword: keyword, //グローバル変数から探してくれる
+            keyword: keyword,
             hits: '20',
             page: page,
           },
-          
         }).done(function(data) {
           console.log(data);
 
@@ -143,7 +140,6 @@
           showBookData(data);
         }).fail(function(error) {
           console.log(error.status);
-          //関数
           clearPageData();
           console.log(error.status);
           switch (error.status) {
@@ -167,72 +163,36 @@
               break;
           }
           $('.message').append(error_message);
-
         });
-        
       }
 
       function showBookData(data) {
-        // if 多い方を後にする 例外を先
-        // 0を先
-        if (data.count > 0) {
-            var item_data = '';
-            $.each(data.Items, function(i, item) {
-              //毎回リセット
-              item_data += 
-                '<li class="lists__item">' + 
-                  '<div class="lists__item__inner">' +
-                    '<a href=" ' + item.Item.itemUrl + ' " class="lists__item__link" target="_blank">' +
-                      '<img src=" ' + item.Item.largeImageUrl + ' " class="lists__item__img" alt="">' +
-                      '<p class="lists__item__detail">作品名：' + item.Item.title + '</p>' + 
-                      '<p class="lists__item__detail">作者　：' + item.Item.author +  '</p>' +
-                      '<p class="lists__item__detail">出版社：' + item.Item.publisherName + '</p>' +
-                    '</a>' +
-                  '</div>' +
-                '</li>'
-            })
-            $('ul').append(item_data); //
-            
-            //関数名変更　表示するニュアンス
-            showPagination(data);
+        if (data.count <= 0) {
+          var error_message = $('<p class="error-message">検索結果が見つかりませんでした。<br>別のキーワードで検索して下さい。</p>');
+          $('.message').append(error_message);
+        } else {
+          var item_data = '';
+          $.each(data.Items, function(i, item) {
+            item_data +=
+              '<li class="lists__item">' +
+                '<div class="lists__item__inner">' +
+                  '<a href=" ' + item.Item.itemUrl + ' " class="lists__item__link" target="_blank">' +
+                    '<img src=" ' + item.Item.largeImageUrl + ' " class="lists__item__img" alt="">' +
+                    '<p class="lists__item__detail">作品名：' + item.Item.title + '</p>' + 
+                    '<p class="lists__item__detail">作者：' + item.Item.author +  '</p>' +
+                    '<p class="lists__item__detail">出版社：' + item.Item.publisherName + '</p>' +
+                  '</a>' +
+                '</div>' +
+              '</li>'
+          });
+          $('ul').append(item_data);
 
-          } else {
-            //0件は通信成功
-            //通信成功時 200
-            var error_message = $('<p class="error-message">検索結果が見つかりませんでした。<br>別のキーワードで検索して下さい。</p>');
-            $('.message').append(error_message);
-          }
-
-        // if (data.count < 0) {
-        //   //0件は通信成功
-        //   //通信成功時 200
-        //   var error_message = $('<p class="error-message">検索結果が見つかりませんでした。<br>別のキーワードで検索して下さい。</p>');
-        //   $('.message').append(error_message);
-        // } else {
-        //   var item_data = '';
-        //   $.each(data.Items, function(i, item) {
-        //     //毎回リセット
-        //     item_data += 
-        //       '<li class="lists__item">' + 
-        //         '<div class="lists__item__inner">' +
-        //           '<a href=" ' + item.Item.itemUrl + ' " class="lists__item__link" target="_blank">' +
-        //             '<img src=" ' + item.Item.largeImageUrl + ' " class="lists__item__img" alt="">' +
-        //             '<p class="lists__item__detail">作品名：' + item.Item.title + '</p>' + 
-        //             '<p class="lists__item__detail">作者　：' + item.Item.author +  '</p>' +
-        //             '<p class="lists__item__detail">出版社：' + item.Item.publisherName + '</p>' +
-        //           '</a>' +
-        //         '</div>' +
-        //       '</li>'
-        //   });
-        //   $('ul').append(item_data); //
-          
-        //   //関数名変更　表示するニュアンス
-        //   showPagination(data);
-        // }
+          showPagination(data);
+        }
       }
-      
+
       function showPagination(data) {
-        var pagination = 
+        var pagination =
           '<div class="pager" data-js="pager">' + 
             '<div class="counter">' + 
               '<span class="counter-current">' + data.page + '</span>/<span class="counter-all">'+ data.pageCount +'</span>' +
@@ -247,7 +207,6 @@
           if (data.page <= 1) {
             $(".btn-item[data-js='page-prev']").addClass('disabled');
           }
-
           if (data.page === data.pageCount) {
             $(".btn-item[data-js='page-next']").addClass('disabled');
           }
@@ -257,12 +216,8 @@
         $('ul').empty();
         $('.message').empty();
       }
-      //最終ページ　次　disabledなってない
-      //エラー文 
-
-      
     </script>
-  
+
   </body>
 </html>
 
