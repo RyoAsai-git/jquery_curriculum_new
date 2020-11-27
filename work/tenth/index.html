@@ -96,33 +96,34 @@
         var page = null;
         var keyword = '';
         $("[data-js='search-btn']").on('click', function() {
-          keyword = $('.search__text__input').val();
+          // keyword = $('.search__text__input').val();
+          keyword = $("[data-js='search-word']").val();
           page = 1;
           getBookData(keyword, page);
         });
 
-        $('body').on('click', "[data-js='page-next']", function(e) {
+        $(document).on('click', "[data-js='page-next']", function(e) {
           e.preventDefault();
-          var page_direction = $(this).data('js');
-          if (page_direction === 'page-next') {
-            if ($(this).hasClass('disabled')) {
-              return false;
-            }
-            page += 1;
+          // var page_direction = $(this).data('js');
+          // if (page_direction === 'page-next') {
+          if ($(this).hasClass('disabled')) {
+            return false;
           }
+          page += 1;
+          // }
           getBookData(keyword, page);
         })
-
-
-        $('body').on('click', "[data-js='page-prev']", function(e) {
+        //document 組み込み
+        //body ブラウザごとに予期せぬ動作
+        $(document).on('click', "[data-js='page-prev']", function(e) {
           e.preventDefault();
-          var page_direction = $(this).data('js');
-          if (page_direction === 'page-prev') {
-            if ($(this).hasClass('disabled')) {
-              return false;
-            }
-            page -= 1;
+          // var page_direction = $(this).data('js');
+          // if (page_direction === 'page-prev') {
+          if ($(this).hasClass('disabled')) {
+            return false;
           }
+          page -= 1;
+          // }
           getBookData(keyword, page);
         }) 
       });
@@ -155,8 +156,8 @@
 
       function showBookData(data) {
         if (data.count <= 0) {
-          var error_message = $('<p class="error-message">検索結果が見つかりませんでした。<br>別のキーワードで検索して下さい。</p>');
-          $('.message').append(error_message);
+          var errorMessage = $('<p class="error-message">検索結果が見つかりませんでした。<br>別のキーワードで検索して下さい。</p>');
+          $('.message').append(errorMessage);
         } else {
           var itemData = '';
           $.each(data.Items, function(i, item) {
@@ -205,27 +206,28 @@
       }
 
       function showErrorMessage(error) {
+        var errorMessage = '';
         switch (error.status) {
           case 400:
-            error_message = $('<p class="error-message">検索文字が入力されていません。</div>');
+            errorMessage = '検索文字が入力されていません。';
             break;
           case 404:
-            error_message = $('<p class="error-message">対象のデータが存在しなかった場合</div>');
+            errorMessage = '対象のデータが存在しなかった場合';
             break;
           case 429:
-            error_message = $('<p class="error-message">リクエスト過多です。しばらく時間を置いてからお試しください。</div>');
+            errorMessage = 'リクエスト過多です。しばらく時間を置いてからお試しください';
             break;
           case 500:
-            error_message = $('<p class="error-message">楽天ウェブサービス内のエラー</div>');
+            errorMessage = '楽天ウェブサービス内のエラー';
             break;
           case 503:
-            error_message = $('<p class="error-message">メンテナンス・リクエスト過多(全ユーザ制限値超過)</div>');
+            errorMessage = 'メンテナンス・リクエスト過多(全ユーザ制限値超過)';
             break;
           default:
-            error_message = $('<p class="error-message">予期せぬエラーが発生しました</div>');
+            errorMessage = '予期せぬエラーが発生しました';
             break;
         }
-        $('.message').append(error_message);
+        $('.message').append('<p class="error-message">' + errorMessage + '</p>');
       }
     </script>
 
