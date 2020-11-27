@@ -93,28 +93,36 @@
       // </div>
 
       $(function() {
-        var page = '';
+        var page = null; //数字の初期値null
         var keyword = '';
         $('.search__btn').on('click', function() {
+          //("[class='test']")
           keyword = $('.search__text__input').val();
           page = 1;
           getBookData(keyword, page);
         });
 
         $('body').on('click', '.btn-item', function(e) {
+          //クラス　cssのスタイルを当てる
+          // data('js')
+          //("[class='test']")
           e.preventDefault();
           var page_direction = $(this).data('js');
           if (page_direction === 'page-next') {
             if ($(this).hasClass('disabled')) {
               return false;
             }
+            
             page += 1;
-          } else if (page_direction === 'page-prev') {
+          }
+          //body on click 分ける 可読性 
+          if (page_direction === 'page-prev') {
             if ($(this).hasClass('disabled')) {
               return false;
             }
             page -= 1;
           }
+
           getBookData(keyword, page);
         })
       });
@@ -140,6 +148,7 @@
           showBookData(data);
         }).fail(function(error) {
           clearPageData();
+          //switch関数化 今後どこかで使う 頭のメモリ
           switch (error.status) {
             case 400:
               error_message = $('<p class="error-message">検索文字が入力されていません。</div>');
@@ -148,7 +157,7 @@
               error_message = $('<p class="error-message">対象のデータが存在しなかった場合</div>');
               break;
             case 429:
-              error_message = error_message = $('<p class="error-message">リクエスト過多です。しばらく時間を置いてからお試しください。</div>');
+              error_message = $('<p class="error-message">リクエスト過多です。しばらく時間を置いてからお試しください。</div>');
               break;
             case 500:
               error_message = $('<p class="error-message">楽天ウェブサービス内のエラー</div>');
@@ -161,6 +170,7 @@
               break;
           }
           $('.message').append(error_message);
+          //
         });
       }
 
@@ -170,6 +180,8 @@
           $('.message').append(error_message);
         } else {
           var item_data = '';
+          //camelCase 基本的にこれ
+          //sneak_caseはあまり使わない
           $.each(data.Items, function(i, item) {
             item_data +=
               '<li class="lists__item">' +
@@ -212,10 +224,10 @@
 
       function clearPageData() {
         $('ul').empty();
+        //class名があるなら優先　lists
         $('.message').empty();
       }
     </script>
 
   </body>
 </html>
-
