@@ -94,14 +94,21 @@
 
       $(function() {
         var page = 0;
+        var keyword = '';
+        var now_page = '';
+        var last_page = '';
+        
         $('.search__btn').on('click', function() {
-          var keyword = $('.search__text__input').val();
+          keyword = $('.search__text__input').val();
           page = 1;
           getBookData(keyword, page);
         });
 
-        $('body').on('click', '.btn-item', page, function(e) {
-          var keyword = $('.search__text__input').val();
+        $('body').on('click', '.btn-item', function(e) {
+          // var keyword = $('.search__text__input').val();
+          //keyword
+          //次を押した後keywordを更新する
+          //グローバル変数を見に行く
           e.preventDefault();
           // console.log(data.page);
           
@@ -117,19 +124,28 @@
           //   }
           //   page -= 1;
           // }
+          //グローバル変数に書き込む
           
           if (page_direction === 'page-next') {
             // if (data.page === data.pageCount) {
             //   return false;
             // }
+            if ($(this).hasClass('disabled')) {
+              return false;
+            }
+            // disabled を持っているか判断。
             page += 1;
           } else if (page_direction === 'page-prev') {
-            if (page === 1) {
+            // if (page === 1) {
+            //   return false;
+            // }
+            if ($(this).hasClass('disabled')) {
               return false;
             }
             page -= 1;
           }
           getBookData(keyword, page);
+          //ajaxはグルーバル変数からわたす
         })
       });
       
@@ -144,7 +160,7 @@
             // 「区分:サービス固有パラメーター」を確認して、必要な情報をdata内に入れましょう。
             applicationId: appId, // (今回はこの変数をIDとして使用します) ※メンターから別途渡されるファイルを読み込んでください。
             booksGenreId: '001',
-            keyword: keyword,
+            keyword: keyword, //グローバル変数
             hits: '20',
             page: page
           },
@@ -223,6 +239,9 @@
       }
       
       function showPagination(data) {
+        now_page = data.page;
+        last_page = data.pageCount;
+        //再代入
         var pagination = 
           '<div class="pager" data-js="pager">' + 
             '<div class="counter">' + 
