@@ -95,7 +95,7 @@
       $(function() {
         var page = null;
         var keyword = '';
-        $("[data-js='search-btn']").on('click', function() {  
+        $("[data-js='search-btn']").on('click', function() {
           keyword = $('.search__text__input').val();
           page = 1;
           getBookData(keyword, page);
@@ -180,9 +180,9 @@
 
       function showPagination(data) {
         var pagination =
-          '<div class="pager" data-js="pager">' + 
+          '<div class="pager" data-js="pager">' +
             '<div class="counter">' + 
-              '<span class="counter-current">' + data.page + '</span>/<span class="counter-all">'+ data.pageCount +'</span>' +
+              '<span class="counter-current">' + data.page + '</span>/<span class="counter-all">' + data.pageCount + '</span>' +
             '</div>' +
             '<div class="btn-wrapper">' +
               '<a class="btn-item" data-js="page-prev" href="">前へ</a>' +
@@ -219,7 +219,7 @@
             error_message = $('<p class="error-message">楽天ウェブサービス内のエラー</div>');
             break;
           case 503:
-            error_message = $('<p class="error-message">メンテナンス・リクエスト過多 (全ユーザ制限値超過)</div>');
+            error_message = $('<p class="error-message">メンテナンス・リクエスト過多(全ユーザ制限値超過)</div>');
             break;
           default:
             error_message = $('<p class="error-message">予期せぬエラーが発生しました</div>');
