@@ -139,18 +139,16 @@
 
           showBookData(data);
         }).fail(function(error) {
-          console.log(error.status);
           clearPageData();
-          console.log(error.status);
           switch (error.status) {
             case 400:
-              error_message = $('<p class="error-message">パラメーターエラー (必須パラメータ不足)</div>');
+              error_message = $('<p class="error-message">検索文字が入力されていません。</div>');
               break;
             case 404:
               error_message = $('<p class="error-message">対象のデータが存在しなかった場合</div>');
               break;
             case 429:
-              error_message = error_message = $('<p class="error-message">リクエスト過多 (各ユーザ制限値超過)</div>');
+              error_message = error_message = $('<p class="error-message">リクエスト過多です。しばらく時間を置いてからお試しください。</div>');
               break;
             case 500:
               error_message = $('<p class="error-message">楽天ウェブサービス内のエラー</div>');
